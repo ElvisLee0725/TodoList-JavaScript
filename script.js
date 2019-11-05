@@ -30,21 +30,19 @@ let todoList = {
 	},
 	toggleAll: function() {
 		let countCompleted = 0;
-		for(let i = 0; i < this.todos.length; i++) {
-			// Case 1: The current is already completed, add the counter
-			if(this.todos[i].completed) {
+		this.todos.forEach((todo) => {
+			if(todo.completed) {
 				countCompleted++;
 			}
-			// Case 2: The current is not completed, toggle it 
 			else {
-				this.todos[i].completed = true;
+				todo.completed = true;
 			}
-		}
-
+		});
+		// Cancel all completed when every todo is initially completed
 		if(countCompleted === this.todos.length) {
-			for(let i = 0; i < this.todos.length; i++) {
-				this.todos[i].completed = false;
-			}
+			this.todos.forEach((todo) => {
+				todo.completed = false;
+			});
 		}
 	}
 };
@@ -87,11 +85,10 @@ let view = {
 	displayTodos: function() {
 		let todoUl = document.querySelector('ul');
 		todoUl.innerHTML = '';
-		for(let i = 0; i < todoList.todos.length; i++) {
-			let todoLi = document.createElement('li');
-			let todo = todoList.todos[i];
-			let todoTextWithCompletion = '';
 
+		todoList.todos.forEach((todo, index) => {
+			let todoLi = document.createElement('li');
+			let todoTextWithCompletion = '';
 			if(todo.completed) {
 				todoTextWithCompletion = `(x) ${todo.todoText}`;
 			}
@@ -99,11 +96,11 @@ let view = {
 				todoTextWithCompletion = `( ) ${todo.todoText}`;
 			}
 
-			todoLi.id = i;	// Assign the index to id property
+			todoLi.id = index;
 			todoLi.textContent = todoTextWithCompletion;
 			todoLi.appendChild(this.createDeleteBtn());
 			todoUl.appendChild(todoLi);
-		}
+		});
 	}, 
 	createDeleteBtn: function() {
 		let deleteBtn = document.createElement('button');
